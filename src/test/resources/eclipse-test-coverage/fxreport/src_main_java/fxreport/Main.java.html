@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>Main.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">java (24 Sep, 2018 2:38:29 AM)</a> &gt; <a href="../../index.html" class="el_group">fxreport</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">fxreport</a> &gt; <span class="el_source">Main.java</span></div><h1>Main.java</h1><pre class="source lang-java linenums">package fxreport;
+
+import java.io.File;
+import java.util.List;
+
+import domain.DailySettlementReport;
+import domain.Instruction;
+import service.FileOperations;
+import service.ReportGenerator;
+
+<span class="nc" id="L11">public class Main {</span>
+
+	public static void main(String[] args) throws Exception {
+<span class="fc bfc" id="L14" title="All 2 branches covered.">		if (args.length &lt; 1) {</span>
+<span class="fc" id="L15">			System.err.println(&quot;Please specify input file&quot;);</span>
+<span class="fc" id="L16">		} else {</span>
+<span class="fc" id="L17">			List&lt;Instruction&gt; instructions = FileOperations.readData(new File(args[0]));</span>
+<span class="fc" id="L18">			DailySettlementReport dailySettlementReport = ReportGenerator.generateDailySettlementReport(instructions);</span>
+<span class="fc" id="L19">			ReportGenerator.generateRank(instructions);</span>
+<span class="fc" id="L20">			FileOperations.printReport(instructions, dailySettlementReport);</span>
+		}
+<span class="fc" id="L22">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span>java (24 Sep, 2018 2:38:29 AM)</div></body></html>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>ReportGeneratorTest.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">java (24 Sep, 2018 2:38:29 AM)</a> &gt; <a href="../../index.html" class="el_group">fxreport</a> &gt; <a href="../index.html" class="el_bundle">src/test/java</a> &gt; <a href="index.source.html" class="el_package">service</a> &gt; <span class="el_source">ReportGeneratorTest.java</span></div><h1>ReportGeneratorTest.java</h1><pre class="source lang-java linenums">package service;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
+import java.io.File;
+import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import domain.DailySettlementReport;
+import domain.Instruction;
+
+<span class="fc" id="L15">public class ReportGeneratorTest {</span>
+
+	private List&lt;Instruction&gt; instructions;
+	
+	@Before
+	public void init() throws Exception {
+<span class="fc" id="L21">		new ReportGenerator();</span>
+<span class="fc" id="L22">		File file = new File(FileOperationsTest.class.getResource(&quot;/TestData.csv&quot;).toURI());</span>
+<span class="fc" id="L23">		instructions = FileOperations.readData(file);</span>
+<span class="fc" id="L24">	}</span>
+	
+	@Test
+	public void testGenerateDailySettlementReport() throws Exception{
+<span class="fc" id="L28">		DailySettlementReport report = ReportGenerator.generateDailySettlementReport(instructions);</span>
+<span class="fc" id="L29">		assertEquals(11, report.getIncomingReport().size());</span>
+<span class="fc" id="L30">		assertEquals(10, report.getOutgoingReport().size());</span>
+<span class="fc" id="L31">	}</span>
+
+	@Test
+	public void testGenerateRank() throws Exception{
+<span class="fc" id="L35">		ReportGenerator.generateRank(instructions);</span>
+<span class="fc" id="L36">		float previousUsdEquivalent = Float.MAX_VALUE;</span>
+<span class="fc bfc" id="L37" title="All 2 branches covered.">		for (Instruction instruction : instructions) {</span>
+<span class="pc bpc" id="L38" title="1 of 2 branches missed.">			if (previousUsdEquivalent &lt; instruction.getUsdEquivalent()) {</span>
+<span class="nc" id="L39">				fail(String.format(&quot;Sorting order failed as %s ranked heigher than %s&quot;, previousUsdEquivalent, instruction.getUsdEquivalent()));</span>
+			}
+<span class="fc" id="L41">			previousUsdEquivalent = instruction.getUsdEquivalent();</span>
+		}
+<span class="fc" id="L43">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span>java (24 Sep, 2018 2:38:29 AM)</div></body></html>

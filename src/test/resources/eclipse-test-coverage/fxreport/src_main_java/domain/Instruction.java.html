@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>Instruction.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">java (24 Sep, 2018 2:38:29 AM)</a> &gt; <a href="../../index.html" class="el_group">fxreport</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">domain</a> &gt; <span class="el_source">Instruction.java</span></div><h1>Instruction.java</h1><pre class="source lang-java linenums">package domain;
+
+import java.util.Calendar;
+
+<span class="fc" id="L5">public class Instruction {</span>
+
+	private String entity;
+	private String direction;
+	private float agreedFx;
+	private String currency;
+	private Calendar instructionDate;
+	private Calendar settlementDate;
+	private int units;
+	private float pricePerUnit;
+	private float usdEquivalent;
+	private int rank;
+	
+	public String getEntity() {
+<span class="fc" id="L19">		return entity;</span>
+	}
+	public void setEntity(String entity) {
+<span class="fc" id="L22">		this.entity = entity;</span>
+<span class="fc" id="L23">	}</span>
+	public String getDirection() {
+<span class="fc" id="L25">		return direction;</span>
+	}
+	
+	public void setDirection(String direction) {
+<span class="fc" id="L29">		this.direction = direction;</span>
+<span class="fc" id="L30">	}</span>
+	public float getAgreedFx() {
+<span class="fc" id="L32">		return agreedFx;</span>
+	}
+	
+	public void setAgreedFx(float agreedFx) {
+<span class="fc" id="L36">		this.agreedFx = agreedFx;</span>
+<span class="fc" id="L37">	}</span>
+	public String getCurrency() {
+<span class="fc" id="L39">		return currency;</span>
+	}
+	public void setCurrency(String currency) {
+<span class="fc" id="L42">		this.currency = currency;</span>
+<span class="fc" id="L43">	}</span>
+	
+	public Calendar getInstructionDate() {
+<span class="fc" id="L46">		return instructionDate;</span>
+	}
+	public void setInstructionDate(Calendar instructionDate) {
+<span class="fc" id="L49">		this.instructionDate = instructionDate;</span>
+<span class="fc" id="L50">	}</span>
+	
+	public Calendar getSettlementDate() {
+<span class="fc" id="L53">		return settlementDate;</span>
+	}
+	public void setSettlementDate(Calendar settlementDate) {
+<span class="fc" id="L56">		this.settlementDate = settlementDate;</span>
+<span class="fc" id="L57">	}</span>
+	
+	public int getUnits() {
+<span class="fc" id="L60">		return units;</span>
+	}
+	public void setUnits(int units) {
+<span class="fc" id="L63">		this.units = units;</span>
+<span class="fc" id="L64">	}</span>
+	
+	public float getPricePerUnit() {
+<span class="fc" id="L67">		return pricePerUnit;</span>
+	}
+	public void setPricePerUnit(float pricePerUnit) {
+<span class="fc" id="L70">		this.pricePerUnit = pricePerUnit;</span>
+<span class="fc" id="L71">	}</span>
+	
+	public float getUsdEquivalent() {
+<span class="fc" id="L74">		return usdEquivalent;</span>
+	}
+	public void setUsdEquivalent(float usdEquivalent) {
+<span class="fc" id="L77">		this.usdEquivalent = usdEquivalent;</span>
+<span class="fc" id="L78">	}</span>
+	
+	public int getRank() {
+<span class="fc" id="L81">		return rank;</span>
+	}
+	public void setRank(int rank) {
+<span class="fc" id="L84">		this.rank = rank;</span>
+<span class="fc" id="L85">	}</span>
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span>java (24 Sep, 2018 2:38:29 AM)</div></body></html>
