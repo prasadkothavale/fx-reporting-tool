@@ -2,10 +2,12 @@ package domain;
 
 import java.util.Calendar;
 
+import constants.Direction;
+
 public class Instruction {
 
 	private String entity;
-	private String direction;
+	private Direction direction;
 	private float agreedFx;
 	private String currency;
 	private Calendar instructionDate;
@@ -21,11 +23,11 @@ public class Instruction {
 	public void setEntity(String entity) {
 		this.entity = entity;
 	}
-	public String getDirection() {
+	public Direction getDirection() {
 		return direction;
 	}
 	
-	public void setDirection(String direction) {
+	public void setDirection(Direction direction) {
 		this.direction = direction;
 	}
 	public float getAgreedFx() {
@@ -83,5 +85,21 @@ public class Instruction {
 	public void setRank(int rank) {
 		this.rank = rank;
 	}
+	
+	public Instruction() {}
+	public Instruction(String entity, Direction direction, float agreedFx, String currency, Calendar instructionDate,
+			Calendar settlementDate, int units, float pricePerUnit) {
+		this.entity = entity;
+		this.direction = direction;
+		this.agreedFx = agreedFx;
+		this.currency = currency;
+		this.instructionDate = instructionDate;
+		this.settlementDate = settlementDate;
+		this.units = units;
+		this.pricePerUnit = pricePerUnit;
+	}
+	
+	
+	
 	
 }

@@ -1,22 +1,21 @@
 package fxreport;
 
-import java.io.File;
-
 import org.junit.Test;
 
-import service.FileOperationsTest;
+import controller.MainController;
 
 public class MainTest {
 
 	@Test
 	public void test() throws Exception {
-		File file = new File(FileOperationsTest.class.getResource("/TestData.csv").toURI());
-		String[] args = {file.getAbsolutePath()};
-		Main.main(args);
-		
-		// negative test
-		args = new String[0];
-		Main.main(args);
+		String[] args = {"2018-09-06"};
+		MainController.main(args);
+	}
+	
+	@Test(expected = Exception.class)
+	public void testException() throws Exception {
+		String[] args = new String[0];
+		MainController.main(args);
 	}
 
 }
