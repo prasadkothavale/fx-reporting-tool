@@ -17,7 +17,7 @@ public class UtilsTest {
 	public void testToCalendar() throws FxReportException {
 		String date = "2018-09-06";
 		Calendar calendar = Utils.toCalendar(date);
-		assertEquals(date, Utils.toString(calendar));
+		assertEquals(date, Utils.getDateAsString(calendar));
 	}
 	
 	@Test(expected = FxReportException.class )

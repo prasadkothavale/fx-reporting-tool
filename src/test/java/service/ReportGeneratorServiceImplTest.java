@@ -1,9 +1,12 @@
 package service;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
 import static utils.Utils.toCalendar;
 
 import java.util.ArrayList;
@@ -13,6 +16,7 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 
 import constants.Direction;
 import dao.ReportGeneratorDao;
@@ -44,8 +48,30 @@ public class ReportGeneratorServiceImplTest {
 		Report report = new Report();
 		when(reportGeneratorDaoMock.findInstructionsBySettlementDate(any(Calendar.class))).thenReturn(instructions);
 		when(reportGeneratorDaoMock.saveReport(any(Calendar.class), any(Report.class))).thenReturn(report);
-		Report actualReport = reportGeneratorServiceImpl.generateReport(toCalendar("2018-09-06"));
-		assertNotNull(actualReport);
+		ArgumentCaptor<Calendar> calendarCaptor = ArgumentCaptor.forClass(Calendar.class);
+		ArgumentCaptor<Report> reportCaptor = ArgumentCaptor.forClass(Report.class);
+		
+		reportGeneratorServiceImpl.generateReport(toCalendar("2018-09-02"));
+		verify(reportGeneratorDaoMock).saveReport(calendarCaptor.capture(), reportCaptor.capture());
+		
+		Report savedReport = reportCaptor.getValue();
+		
+		// Test settled incoming and outgoing amount
+		assertEquals(32982.78, savedReport.getIncomingUSD(), 0.01);
+		assertEquals(75154.57, savedReport.getOutgoingUSD(), 0.01);
+		
+		// Test filtering of buy and sell directions 
+		assertEquals(2, savedReport.getRankedIncomingInstructions().size());
+		assertEquals(2, savedReport.getRankedOutgoingInstructions().size());
+		assertTrue(Direction.SELL.equals(savedReport.getRankedIncomingInstructions().get(0).getDirection()));
+		assertTrue(Direction.BUY.equals(savedReport.getRankedOutgoingInstructions().get(0).getDirection()));
+		
+		// Test ranking and sorting
+		assertTrue(savedReport.getRankedIncomingInstructions().get(0).getUsdEquivalent() >= 
+				savedReport.getRankedIncomingInstructions().get(1).getUsdEquivalent());
+		assertTrue(savedReport.getRankedOutgoingInstructions().get(0).getUsdEquivalent() >= 
+				savedReport.getRankedOutgoingInstructions().get(1).getUsdEquivalent());
+		
 	}
 
 	@Test

@@ -36,7 +36,7 @@ public class Utils {
 	 * @param calendar
 	 * @return
 	 */
-	public static String toString(Calendar calendar) {
+	public static String getDateAsString(Calendar calendar) {
 		return dateFormat.format(calendar.getTime());
 	}
 	
@@ -81,7 +81,7 @@ public class Utils {
 	 * @param report
 	 */
 	public static void printReport(Report report, Calendar settlementDate) {
-		System.out.println(String.format("Settlement Report for %s", toString(settlementDate)));
+		System.out.println(String.format("Settlement Report for %s", getDateAsString(settlementDate)));
 		System.out.println("================================\n");
 		System.out.println(String.format("Settled incoming amount: %s USD", report.getIncomingUSD()));
 		System.out.println(String.format("Settled outgoing amount: %s USD\n", report.getOutgoingUSD()));
@@ -104,8 +104,8 @@ public class Utils {
 	private static void printReport(List<Instruction> instructions) {
 		for(Instruction i : instructions) {
 			System.out.println(String.format("%d\t| %s\t| %s\t| %.2f\t\t| %s\t\t| %s\t| %s\t| %d\t| %.2f\t| %.2f", 
-					i.getRank(), i.getEntity(), i.getDirection(), i.getAgreedFx(), i.getCurrency(),toString(i.getInstructionDate()),
-					toString(i.getSettlementDate()), i.getUnits(), i.getPricePerUnit(), i.getUsdEquivalent()));
+					i.getRank(), i.getEntity(), i.getDirection(), i.getAgreedFx(), i.getCurrency(),getDateAsString(i.getInstructionDate()),
+					getDateAsString(i.getSettlementDate()), i.getUnits(), i.getPricePerUnit(), i.getUsdEquivalent()));
 		}
 		
 	}
