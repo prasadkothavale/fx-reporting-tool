@@ -40,16 +40,16 @@ public class Report {
 		return rankedIncomingInstructions;
 	}
 
-	/*public void setRankedIncomingInstructions(List<Instruction> rankedIncomingInstructions) {
+	public void setRankedIncomingInstructions(List<Instruction> rankedIncomingInstructions) {
 		this.rankedIncomingInstructions = rankedIncomingInstructions;
-	}*/
+	}
 
 	public List<Instruction> getRankedOutgoingInstructions() {
 		return rankedOutgoingInstructions;
 	}
 
-	/*public void setRankedOutgoingInstructions(List<Instruction> rankedOutgoingInstructions) {
+	public void setRankedOutgoingInstructions(List<Instruction> rankedOutgoingInstructions) {
 		this.rankedOutgoingInstructions = rankedOutgoingInstructions;
-	}*/
+	}
 
 }
