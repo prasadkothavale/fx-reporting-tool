@@ -1,89 +1,79 @@
 package service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
-import static utils.Utils.toCalendar;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-
-import constants.Direction;
 import dao.ReportGeneratorDao;
 import dao.ReportGeneratorDaoImpl;
-import domain.Instruction;
 import domain.Report;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.time.LocalDate;
+
+import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static utils.Utils.createData;
 
 public class ReportGeneratorServiceImplTest {
 
-	private ReportGeneratorServiceImpl reportGeneratorServiceImpl;
-	
-	private ReportGeneratorDao reportGeneratorDaoMock;
-	
-	@Before
-	public void setUp() throws Exception {
-		reportGeneratorServiceImpl = ReportGeneratorServiceImpl.getInstance();
-		reportGeneratorDaoMock = mock(ReportGeneratorDao.class);
-		reportGeneratorServiceImpl.setReportGeneratorDao(reportGeneratorDaoMock);
-	}
+    private ReportGeneratorDao reportGeneratorDao;
+    private ReportGeneratorService reportGeneratorService;
 
-	@Test
-	public void testGenerateReport() throws Exception {
-		List<Instruction> instructions = new ArrayList<>();
-		instructions.add(new Instruction("EO487I", Direction.BUY, 1.17f, "EUR", toCalendar("2018-08-31"), toCalendar("2018-09-02"), 370, 119.48f));
-		instructions.add(new Instruction("OB527I", Direction.SELL, 0.014f, "INR", toCalendar("2018-09-01"), toCalendar("2018-09-02"), 597, 340.43f));
-		instructions.add(new Instruction("YV787D", Direction.BUY, 0.27f, "AED", toCalendar("2018-09-01"), toCalendar("2018-09-02"), 600, 144.64f));
-		instructions.add(new Instruction("DU783H", Direction.SELL, 0.27f, "SAR", toCalendar("2018-09-01"), toCalendar("2018-09-02"), 244, 457.46f));
-		
-		Report report = new Report();
-		when(reportGeneratorDaoMock.findInstructionsBySettlementDate(any(Calendar.class))).thenReturn(instructions);
-		when(reportGeneratorDaoMock.saveReport(any(Calendar.class), any(Report.class))).thenReturn(report);
-		ArgumentCaptor<Calendar> calendarCaptor = ArgumentCaptor.forClass(Calendar.class);
-		ArgumentCaptor<Report> reportCaptor = ArgumentCaptor.forClass(Report.class);
-		
-		reportGeneratorServiceImpl.generateReport(toCalendar("2018-09-02"));
-		verify(reportGeneratorDaoMock).saveReport(calendarCaptor.capture(), reportCaptor.capture());
-		
-		Report savedReport = reportCaptor.getValue();
-		
-		// Test settled incoming and outgoing amount
-		assertEquals(32982.78, savedReport.getIncomingUSD(), 0.01);
-		assertEquals(75154.57, savedReport.getOutgoingUSD(), 0.01);
-		
-		// Test filtering of buy and sell directions 
-		assertEquals(2, savedReport.getRankedIncomingInstructions().size());
-		assertEquals(2, savedReport.getRankedOutgoingInstructions().size());
-		assertTrue(Direction.SELL.equals(savedReport.getRankedIncomingInstructions().get(0).getDirection()));
-		assertTrue(Direction.BUY.equals(savedReport.getRankedOutgoingInstructions().get(0).getDirection()));
-		
-		// Test ranking and sorting
-		assertTrue(savedReport.getRankedIncomingInstructions().get(0).getUsdEquivalent() >= 
-				savedReport.getRankedIncomingInstructions().get(1).getUsdEquivalent());
-		assertTrue(savedReport.getRankedOutgoingInstructions().get(0).getUsdEquivalent() >= 
-				savedReport.getRankedOutgoingInstructions().get(1).getUsdEquivalent());
-		
-	}
+    @Before
+    public void setUp() throws Exception {
+        reportGeneratorDao = new ReportGeneratorDaoImpl();
+        reportGeneratorService = new ReportGeneratorServiceImpl(reportGeneratorDao);
+        createData(reportGeneratorService);
+    }
 
-	@Test
-	public void testFindReportBySettlementDate() {
-		Report report = new Report();
-		when(reportGeneratorDaoMock.findReportBySettlementDate(any(Calendar.class))).thenReturn(report);
-		assertNotNull(report);
-	}
-	
-	@After
-	public void tearDown() throws Exception {
-		reportGeneratorServiceImpl.setReportGeneratorDao(ReportGeneratorDaoImpl.getInstance());
-	}
+    @Test
+    public void testGenerateReport_Friday() throws Exception {
+        LocalDate settlementDate = LocalDate.parse("2018-08-31");
+        Report report = reportGeneratorService.generateReport(settlementDate);
+        assertNotNull(report);
+        assertEquals("Incoming", 18268.271f, report.getIncomingUSD());
+        assertEquals("Outgoing", 32390.277f, report.getOutgoingUSD());
+        assertEquals("Incoming Ranked Entity", "Instruction6", report.getRankedIncomingInstructions().get(0).getEntity());
+        assertEquals("Outgoing Ranked Entity", "Instruction5", report.getRankedOutgoingInstructions().get(0).getEntity());
+    }
 
+    @Test
+    public void testGenerateReport_Saturday() throws Exception {
+        LocalDate settlementDate = LocalDate.parse("2018-09-01");
+        Report report = reportGeneratorService.generateReport(settlementDate);
+        assertNotNull(report);
+        assertEquals("Incoming", 0.0f, report.getIncomingUSD());
+        assertEquals("Outgoing", 0.0f, report.getOutgoingUSD());
+        assertEquals("Incoming Ranked Entity", 0, report.getRankedIncomingInstructions().size());
+        assertEquals("Outgoing Ranked Entity", 0, report.getRankedIncomingInstructions().size());
+    }
+
+    @Test
+    public void testGenerateReport_Sunday() throws Exception {
+        LocalDate settlementDate = LocalDate.parse("2018-09-02");
+        Report report = reportGeneratorService.generateReport(settlementDate);
+        assertNotNull(report);
+        assertEquals("Incoming", 5806.7285f, report.getIncomingUSD());
+        assertEquals("Outgoing", 5030.37f, report.getOutgoingUSD());
+    }
+
+    @Test
+    public void testGenerateReport_Monday() throws Exception {
+        LocalDate settlementDate = LocalDate.parse("2018-09-03");
+        Report report = reportGeneratorService.generateReport(settlementDate);
+        assertNotNull(report);
+        assertEquals("Incoming", 94184.47f, report.getIncomingUSD());
+        assertEquals("Outgoing", 178784.7f, report.getOutgoingUSD());
+        assertEquals("Incoming Ranked Entity", "Instruction20", report.getRankedIncomingInstructions().get(0).getEntity());
+        assertEquals("Outgoing Ranked Entity", "Instruction19", report.getRankedOutgoingInstructions().get(0).getEntity());
+    }
+
+    @Test
+    public void testGenerateReport_Tuesday() throws Exception {
+        LocalDate settlementDate = LocalDate.parse("2018-09-04");
+        Report report = reportGeneratorService.generateReport(settlementDate);
+        assertNotNull(report);
+        assertEquals("Incoming", 25577.484f, report.getIncomingUSD());
+        assertEquals("Outgoing", 31204.707f, report.getOutgoingUSD());
+        assertEquals("Incoming Ranked Entity", "Instruction30", report.getRankedIncomingInstructions().get(0).getEntity());
+        assertEquals("Outgoing Ranked Entity", "Instruction29", report.getRankedOutgoingInstructions().get(0).getEntity());
+    }
 }
